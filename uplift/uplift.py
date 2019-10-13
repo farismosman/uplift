@@ -18,6 +18,12 @@ class Uplift(BaseEstimator):
         self._untreated = self._untreated.fit(x_untreated, y_untreated, params)
 
         return self
+
+    def predict_proba(self, X):
+        pass
+
+    def cate(self, X):
+        pass
     
     def split_treated_untrated(self, X, y):
         treated = X[X[self.treatment_column] == 1].drop(columns=self.treatment_column)
