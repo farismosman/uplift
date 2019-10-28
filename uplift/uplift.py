@@ -14,6 +14,3 @@ class Uplift(BaseEstimator):
 
     def predict_proba(self, X):
         raise NotImplementedError()
-
-    def cate(self, X):
-        raise NotImplementedError()

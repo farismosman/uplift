@@ -10,6 +10,12 @@ class TwoModelsUplift(Uplift):
 
         return self
 
+    def predict_proba(self, X):
+        p_treated = self._treated.predict_proba(X)
+        p_untreated = self._untreated.predict_proba(X)
+
+        return p_treated - p_untreated
+
 
     def split_treated_untrated(self, X, y, treatment_column):
         xtreated = X[X[treatment_column] == 1].drop(columns=treatment_column)
