@@ -1,12 +1,23 @@
 from uplift.uplift import Uplift
+from uplift.utils import sample_weights
 
 
 class TwoModelsUplift(Uplift):
 
-    def fit(self, X, y, treatment_column, **params):
+    def fit(self, X, y, **params):
+        treatment_column = params['treatment_column']
+        propensity_column = params['propensity_column']
+
+        treatments = X[treatment_column]
+        propensity = X.pop(propensity_column)
+        weights = sample_weights(treatments, propensity)
+
         xtreated, xuntreated, ytreated, yuntreated = self.split_treated_untrated(X, y, treatment_column)
-        self._treated = self._treated.fit(xtreated, ytreated)
-        self._untreated = self._untreated.fit(xuntreated, yuntreated)
+        treated_weights = weights.loc[xtreated.index]
+        untreated_weights = weights.loc[xuntreated.index]
+
+        self._treated = self._treated.fit(xtreated, ytreated, sample_weight=treated_weights)
+        self._untreated = self._untreated.fit(xuntreated, yuntreated, sample_weight=untreated_weights)
 
         return self
 
